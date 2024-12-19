@@ -2,8 +2,10 @@ package com.example.addressbook.addressbook.controller;
 
 
 
+import com.example.addressbook.addressbook.dto.LoginDto;
+import com.example.addressbook.addressbook.dto.RegisterDto;
 import com.example.addressbook.addressbook.dto.UserDto;
-import com.example.addressbook.addressbook.exception.UserNotFoundException;
+import com.example.addressbook.addressbook.exception.*;
 import com.example.addressbook.addressbook.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,6 +65,57 @@ public class UserController {
         List<UserDto> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody RegisterDto registerDto) {
+        try {
+            userService.register(registerDto);
+            return ResponseEntity.ok("User registered successfully. OTP sent to email.");
+        } catch (InvalidEmailFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format.");
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists with this email.");
+        }
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
+        try {
+            userService.verifyAccount(email, otp);
+            return ResponseEntity.ok("User verified successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (RuntimeException e) {
+            // Handle cases like user not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/regenerate-otp")
+    public ResponseEntity<String> regenerateOtp(@RequestParam String email) {
+        try {
+            userService.regenerateOtp(email);
+            return ResponseEntity.ok("OTP regenerated and sent to email.");
+        } catch (EmailNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
+        }
+    }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody LoginDto loginDto) {
+        try {
+            userService.login(loginDto);
+            return ResponseEntity.ok("Login successful.");
+        } catch (EmailNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found.");
+        } catch (ResultNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password does not match!!");
+        }
+    }
+
+
 }
 
 

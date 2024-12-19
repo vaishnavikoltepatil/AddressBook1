@@ -2,6 +2,8 @@ package com.example.addressbook.addressbook.service;
 
 
 
+import com.example.addressbook.addressbook.dto.LoginDto;
+import com.example.addressbook.addressbook.dto.RegisterDto;
 import com.example.addressbook.addressbook.dto.UserDto;
 
 import java.util.List;
@@ -18,6 +20,13 @@ public interface UserService {
 
     List<UserDto> getAllUsers();
 
+    void register(RegisterDto registerDto);
+
+    void verifyAccount(String email, String otp);
+
+    void regenerateOtp(String email);
+
+    void login(LoginDto loginDto);
 
 
 }

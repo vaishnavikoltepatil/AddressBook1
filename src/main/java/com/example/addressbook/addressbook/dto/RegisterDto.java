@@ -1,55 +1,23 @@
-package com.example.addressbook.addressbook.entity;
+package com.example.addressbook.addressbook.dto;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-//@Getter
-//@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "users")
-public class User {
+@Getter
+@Setter
+public class RegisterDto {
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(nullable = false)
     private String username;
-
-    @Column(nullable = false, unique = true)
-    private  String email;
-
-    @Column(nullable = false, unique = true, length = 10)
+    private String email;
     private String phoneno;
-
-    @Column(nullable = false)
     private String gender;
-
-    @Column(nullable = false)
     private LocalDate dob;
-
-    @Column(nullable = false)
     private String address;
-
-    @Column(nullable = false)
     private String password;
-
-    @Transient
     private String confirmPassword;
-
-    private boolean active;
-    private String otp;
-    private LocalDateTime otpGeneratedTime;
-
 
     public int getId() {
         return id;
@@ -122,28 +90,5 @@ public class User {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getOtp() {
-        return otp;
-    }
-
-    public void setOtp(String otp) {
-        this.otp = otp;
-    }
-
-    public LocalDateTime getOtpGeneratedTime() {
-        return otpGeneratedTime;
-    }
-
-    public void setOtpGeneratedTime(LocalDateTime otpGeneratedTime) {
-        this.otpGeneratedTime = otpGeneratedTime;
-    }
 }
+
